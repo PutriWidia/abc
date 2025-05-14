@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Catatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class CatatanController extends Controller
@@ -12,8 +13,7 @@ class CatatanController extends Controller
     public function index()
     {
         // Ambil semua data catatan dari database
-        $catatan = Catatan::all();
-
+        $catatan = Catatan::whereDate('created_at', Carbon::today())->where('nama_karyawan', Auth::guard('karyawan')->user()->username)->get();
         // Kirim data catatan ke view
         return view('catatan', compact('catatan'));
     }
@@ -45,6 +45,7 @@ class CatatanController extends Controller
 
         // Simpan data catatan baru ke dalam database
         Catatan::create([
+            'nama_karyawan' => Auth::guard('karyawan')->user()->username,
             'nama' => $validated['nama_permainan'],
             'harga' => $validated['harga'],
             'status' => $validated['status'],
@@ -85,6 +86,7 @@ class CatatanController extends Controller
 
         // Lakukan proses penyimpanan catatan
         Catatan::create([
+            'nama_karyawan' => Auth::guard('karyawan')->user()->username,
             'nama' => $permainan,
             'waktu' => $waktu,
             'harga' => $harga,

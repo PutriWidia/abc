@@ -51,7 +51,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr onclick="location.href='/laporan-keuangan-harian';" style="cursor: pointer;">
+        <!-- <tr onclick="location.href='/laporan-keuangan-harian';" style="cursor: pointer;">
             <td>1.</td><td>User123</td><td>05/05/2025</td><td>07.30 - 15.30</td>
             <td>Rp. 1.000.000</td><td>Rp. 200.000</td><td>Rp. 800.000</td>
         </tr>
@@ -78,7 +78,19 @@
         <tr onclick="location.href='/laporan-keuangan-harian';" style="cursor: pointer;">
             <td>7.</td><td>User456</td><td>12/05/2025</td><td>07.30 - 15.30</td>
             <td>Rp. 4.000.000</td><td>Rp. 900.000</td><td>Rp. 3.100.000</td>
+        </tr> -->
+        <!-- onclick="location.href='/laporan-keuangan-harian';" style="cursor: pointer;" -->
+        @foreach($data as $no => $index)
+        <tr >
+            <td>{{$no+1}}</td>
+            <td><a href="/dataCatatanKaryawan/{{$index->nama_karyawan}}">{{ $index->nama_karyawan }}</a></td>
+            <td>{{ $index->tanggal }}</td>
+            <td>07.30 - 15.30</td>
+            <td>{{ $index->pendapatan }}</td>
+            <td>{{ $index->pengeluaran }}</td>
+            <td>{{ $index->pendapatan_bersih }}</td>
         </tr>
+        @endforeach
     </tbody>
 </table>
 

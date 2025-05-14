@@ -10,6 +10,7 @@ class Catatan extends Model
     use HasFactory;
 
     protected $fillable = [
+        'nama_karyawan',
         'nama',
         'harga',
         'status',

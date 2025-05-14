@@ -12,8 +12,12 @@ class Laporan extends Model
     protected $table = 'laporan_keuangan'; 
     
     protected $fillable = [
-        'nama_permainan', 'harga', 'status_pembayaran', 'tanggal',
+        'nama_karyawan','nama_permainan', 'harga', 'status_pembayaran', 'tanggal',
     ];
 
     protected $dates = ['tanggal']; 
+
+    protected $attributes = [
+        'status_pembayaran' => 'belum dibayar'
+    ];
 }

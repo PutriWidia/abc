@@ -18,6 +18,7 @@ use App\Http\Controllers\KategoriController;
 
 Route::get('/laporan-keuangan-harian', [LaporanController::class, 'index'])->name('laporan-harian');
 Route::get('/keuangan-admin', [KeuanganController::class, 'index'])->name('keuangan-admin');
+Route::get('/dataCatatanKaryawan/{username}', [KeuanganController::class, 'getdata'])->name('keuangan-data');
 Route::post('/laporan-keuangan/tambah', [LaporanController::class, 'tambah'])->name('laporan-keuangan.tambah');
 
 Route::post('/catatan/update-keterangan', [CatatanController::class, 'updateKeterangan'])->name('catatan.updateKeterangan');
@@ -90,7 +91,7 @@ Route::post('/kurangiRusak',[buttonController::class, 'kurangiRusak'])->name('ku
 Route::post('/tambahiRusak',[buttonController::class, 'tambahiRusak'])->name('tambahiRusak');
 
 
-Route::get('/keuangan-admin', [KeuanganController::class, 'index']);
+// Route::get('/keuangan-admin', [KeuanganController::class, 'index']);
 
 Route::get('/landing', function () {
     return view('landing');

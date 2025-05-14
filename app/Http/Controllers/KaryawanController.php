@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User;
 use App\Models\Catatan;
 use App\Models\Pengeluaran;
+use App\Models\Laporan;
+use App\Models\LaporanKaryawan;
+
 use App\Models\Karyawan;
 use Carbon\Carbon;
 
@@ -47,15 +50,72 @@ class KaryawanController extends Controller
 
         $catatansChecked = Catatan::where('checked', 1)->get();
 
-        $pendapatan = Catatan::where('status', 'Lunas')
+        $pendapatan = Catatan::where('status', 'Lunas')->where('nama_karyawan', Auth::guard('karyawan')->user()->username)
         ->whereDate('created_at', $today)
-        ->sum('harga');
-        //dd($pendapatan);
-
+        ->sum('harga') ?? 0;
+        $checkPendapatan = Catatan::where('status', 'Lunas')->orWhere('status', 'Belum')->count() ?? 0;
+        
         $pengeluaran = Pengeluaran::whereDate('created_at', $today)
-        ->sum('nominal');
+        ->sum('nominal') ?? 0;
+
+        $cariUser = LaporanKaryawan::whereDate('created_at', Carbon::today())
+            ->where('nama_karyawan', $karyawan->username)
+            ->first();
+        $laporanKaryawan = Laporan::where('nama_karyawan', $karyawan->username)->get() ?? collect();
+        $pendapatanKaryawan = Laporan::where('status_pembayaran', 'Lunas')
+    ->whereDate('created_at', $today)
+    ->sum('harga') ?? 0;
+
+    // LaporanKaryawan::create([
+    //             'nama_karyawan' => Auth::guard('karyawan')->user()->username,
+    //             'pendapatan' => $pendapatan,
+    //             'pengeluaran' => $pengeluaran,
+    //             'pendapatan_bersih' => $pendapatan - $pengeluaran,
+    //             'waktu' => now(),
+    //             'tanggal' => now(),
+    //         ]);
+        // dd($cariUser);
+        if ($cariUser) {
+            if ($checkPendapatan == 0) {
+               $cariUser->update([
+                    'pendapatan' => $pendapatanKaryawan,
+                    'pengeluaran' => $pengeluaran,
+                    'pendapatan_bersih' => $pendapatanKaryawan - $pengeluaran,
+                    'waktu' => now(),
+                    'tanggal' => now(),
+                ]);
+            }else{
+
+                $cariUser->update([
+                'pendapatan' => $pendapatan,
+                'pengeluaran' => $pengeluaran,
+                'pendapatan_bersih' => $pendapatan - $pengeluaran,
+                'waktu' => now(),
+                'tanggal' => now(),
+            ]);
+            }
+        } else {
+            LaporanKaryawan::create([
+                'nama_karyawan' => Auth::guard('karyawan')->user()->username,
+                'pendapatan' => $pendapatan,
+                'pengeluaran' => $pengeluaran,
+                'pendapatan_bersih' => $pendapatan - $pengeluaran,
+                'waktu' => now(),
+                'tanggal' => now(),
+            ]);
+        }
+        // LaporanKaryawan::create([
+        //     'nama_karyawan' => Auth::guard('karyawan')->user()->username,
+        //     'pendapatan' => $pendapatan,
+        //     'pengeluaran' => $pengeluaran,
+        //     'pendapatan_bersih' => $pendapatan - $pengeluaran,
+        //     'waktu' => now(),
+        //     'tanggal' => now(),
+        // ]);
 
         $pendapatanBersih = $pendapatan - $pengeluaran;
+
+        
 
         return view('karyawan-home', [
             'username' => $karyawan->username,

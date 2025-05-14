@@ -29,7 +29,9 @@
               <p class="tanggal">Tanggal: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
               <div class="user-info">
                 <img src="{{ asset('images/User.png') }}" alt="User" class="user-icon" />
-                <span class="username">{{ Auth::guard('karyawan')->user()->name }}</span>
+                <span class="username">
+                    {{ Auth::guard('karyawan')->check() ? Auth::guard('karyawan')->user()->name : 'Guest' }}
+                </span>
               </div>
             </div>
 
@@ -62,6 +64,7 @@
           <tr class="{{ isset($item['waktu_habis']) && $item['waktu_habis'] ? 'expired' : '' }}">
 
           <td>
+            <input type="hidden" name="laporan_id[]" value="{{ $item['id'] }}">
             <input
               type="checkbox"
               name="laporan_cek[]"
@@ -77,11 +80,12 @@
             {{-- Dropdown Permainan --}}
             <td>
               <select name="nama_permainan" class="dropdown-permainan">
-                <option value="Skuter" {{ $item['nama'] == 'Skuter' ? 'selected' : '' }}>Skuter</option>
-                <option value="Mobil" {{ $item['nama'] == 'Mobil' ? 'selected' : '' }}>Mobil</option>
-                <option value="Motor" {{ $item['nama'] == 'Motor' ? 'selected' : '' }}>Motor</option>
-                <option value="Melukis" {{ $item['nama'] == 'Melukis' ? 'selected' : '' }}>Melukis</option>
-                <option value="Rumah Pintar" {{ $item['nama'] == 'Rumah Pintar' ? 'selected' : '' }}>Rumah Pintar</option>
+                <option value="Skuter" {{ isset($item['nama']) && $item['nama'] == 'Skuter' ? 'selected' : '' }}>Skuter</option>
+<option value="Mobil" {{ isset($item['nama']) && $item['nama'] == 'Mobil' ? 'selected' : '' }}>Mobil</option>
+<option value="Motor" {{ isset($item['nama']) && $item['nama'] == 'Motor' ? 'selected' : '' }}>Motor</option>
+<option value="Melukis" {{ isset($item['nama']) && $item['nama'] == 'Melukis' ? 'selected' : '' }}>Melukis</option>
+<option value="Rumah Pintar" {{ isset($item['nama']) && $item['nama'] == 'Rumah Pintar' ? 'selected' : '' }}>Rumah Pintar</option>
+
               </select>
             </td>
 
@@ -350,49 +354,47 @@ function updateCheckboxStatus(id, status) {
 
 // Event listener untuk tombol Done
 document.querySelector('.button-group button').addEventListener('click', function () {
-  const selectedCheckboxes = document.querySelectorAll('input[name="laporan_cek[]"]:checked');
+    const selectedCheckboxes = document.querySelectorAll('input[name="laporan_cek[]"]:checked');
 
-  if (selectedCheckboxes.length > 0) {
-    // Mengumpulkan data yang terpilih
-    const selectedItems = Array.from(selectedCheckboxes).map(checkbox => {
-      const row = checkbox.closest('tr');
-      return {
-        id: checkbox.value,
-        nama: row.querySelector('td:nth-child(3)').textContent.trim(),
-        harga: row.querySelector('td:nth-child(5)').textContent.trim(),
-        status: row.querySelector('select[name="status_pembayaran"]').value
-      };
-    });
-
-    // Kirim data ke server untuk dimasukkan ke laporan keuangan
-    fetch('{{ route('laporan-keuangan.tambah') }}', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-      },
-      body: JSON.stringify({ laporan: selectedItems })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Hapus data dari catatan setelah berhasil dikirim ke laporan
-        selectedCheckboxes.forEach(checkbox => {
-          const row = checkbox.closest('tr');
-          row.remove();
+    if (selectedCheckboxes.length > 0) {
+        const selectedItems = Array.from(selectedCheckboxes).map(checkbox => {
+            const row = checkbox.closest('tr');
+            return {
+                id: checkbox.value,
+                idData: row.querySelector('input[name="laporan_id[]"]').value,
+                nama_permainan: row.querySelector('select[name="nama_permainan"]').value,
+                harga: row.querySelector('td:nth-child(5)').textContent.trim(),
+                status: row.querySelector('select[name="status_pembayaran"]')?.value || 'belum dibayar'
+            };
         });
-        alert('Data berhasil dipindahkan ke laporan keuangan.');
-      } else {
-        alert('Gagal memindahkan data ke laporan keuangan: ' + data.message);
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Terjadi kesalahan.');
-    });
-  } else {
-    alert('Pilih catatan terlebih dahulu.');
-  }
+
+        fetch('{{ route('laporan-keuangan.tambah') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ laporan: selectedItems })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                selectedCheckboxes.forEach(checkbox => {
+                    const row = checkbox.closest('tr');
+                    row.remove();
+                });
+                alert('Data berhasil dipindahkan ke laporan keuangan.');
+            } else {
+                alert('Gagal memindahkan data ke laporan keuangan: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan.');
+        });
+    } else {
+        alert('Pilih catatan terlebih dahulu.');
+    }
 });
 
 

@@ -74,6 +74,7 @@ Route::post('auth/karyawan-login', [KaryawanController::class, 'login'])->name('
 Route::get('/admin-home', [AdminController::class, 'index'])->name('admin.home');
 Route::match(['get', 'post'], '/admin-home', [AdminController::class, 'index']);
 
+
 Route::get('auth/admin-login', function () {
     return view('auth.admin-login');
 });

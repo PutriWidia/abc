@@ -25,16 +25,6 @@
         <input type="text" placeholder="Search">
       </div>
 
-      <div class="filter-wrapper">
-        <button class="filter-btn">&#x1F5D2;</button>
-        <div class="filter-dropdown">
-          <ul>
-            <li>Waktu</li>
-            <li>Nama Permainan</li>
-          </ul>
-        </div>
-      </div>
-
 
 
   <main>

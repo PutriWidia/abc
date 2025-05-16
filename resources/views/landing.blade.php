@@ -12,7 +12,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
-        <img src="{{ asset('images/Logo2.png') }}" alt="Logo" class="navbar-logo">
+        <img src="{{ asset('images/Logo3.png') }}" alt="Logo" class="navbar-logo">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>

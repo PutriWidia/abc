@@ -13,6 +13,7 @@ class LaporanController extends Controller
 {
     public function index()
     {
+        session(['previous_page' => url()->previous()]);
         // Ambil data laporan harian yang diperlukan
         $data = Laporan::whereDate('tanggal', now()->toDateString())->where('nama_karyawan', Auth::guard('karyawan')->user()->username)
         ->get();

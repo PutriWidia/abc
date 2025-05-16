@@ -9,6 +9,6 @@ class LaporanKaryawan extends Model
     protected $table = 'laporankaryawan'; // Nama tabel yang sesuai dengan database
 
     protected $fillable = [
-    'nama_karyawan', 'pendapatan', 'pengeluaran', 'pendapatan_bersih', 'tanggal'
+    'nama_karyawan', 'waktu', 'pendapatan', 'pengeluaran', 'pendapatan_bersih', 'tanggal'
     ];
 }

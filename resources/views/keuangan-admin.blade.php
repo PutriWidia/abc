@@ -24,7 +24,7 @@
 
         <!-- Search -->
         <div class="search-bar">
-            <input type="text" placeholder="Search">
+            <input type="text" id="searchInput" placeholder="Search">
         </div>
 
         <!-- Filter -->
@@ -96,8 +96,73 @@
 
 <!-- Total -->
 <div class="total">
-    <strong>Total Pendapatan:</strong> Rp. 16.000.000<br>
-    <strong>Total Pengeluaran:</strong> Rp. 3.700.000<br>
-    <strong>Pendapatan Bersih:</strong> Rp. 12.300.000
+    <strong>Total Pendapatan:</strong> <span id="totalPendapatan">Rp. 0</span><br>
+    <strong>Total Pengeluaran:</strong> <span id="totalPengeluaran">Rp. 0</span><br>
+    <strong>Pendapatan Bersih:</strong> <span id="totalPendapatanBersih">Rp. 0</span>
 </div>
 
+<script>
+    document.getElementById('searchInput').addEventListener('input', filterTable);
+    document.getElementById('filter-select').addEventListener('change', filterTable);
+
+    function filterTable() {
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const filterValue = document.getElementById('filter-select').value;
+        const rows = document.querySelectorAll('.report-table tbody tr');
+        const today = new Date();
+        
+        rows.forEach(row => {
+            const nameText = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            const dateText = row.querySelector('td:nth-child(3)').textContent;
+            const rowDate = new Date(dateText.split('/').reverse().join('-'));
+
+            let isVisible = nameText.includes(searchInput);
+            if (filterValue === "Harian") isVisible = isVisible && (rowDate.toDateString() === today.toDateString());
+            if (filterValue === "Mingguan") isVisible = isVisible && isInThisWeek(rowDate);
+            if (filterValue === "Bulanan") isVisible = isVisible && (rowDate.getMonth() === today.getMonth() && rowDate.getFullYear() === today.getFullYear());
+
+            row.style.display = isVisible ? '' : 'none';
+        });
+
+        // Update total setelah filter
+        updateTotal();
+    }
+
+    function isInThisWeek(date) {
+        const today = new Date();
+        const start = new Date(today.setDate(today.getDate() - today.getDay()));
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        return date >= start && date <= end;
+    }
+
+    // Fungsi untuk hitung total secara dinamis
+    function updateTotal() {
+        const rows = document.querySelectorAll('.report-table tbody tr');
+        let totalPendapatan = 0;
+        let totalPengeluaran = 0;
+        let totalPendapatanBersih = 0;
+
+        rows.forEach(row => {
+            if (row.style.display !== 'none') {
+                const pendapatan = parseInt(row.querySelector('td:nth-child(5)').textContent.replace(/[^0-9]/g, '')) || 0;
+                const pengeluaran = parseInt(row.querySelector('td:nth-child(6)').textContent.replace(/[^0-9]/g, '')) || 0;
+                const bersih = parseInt(row.querySelector('td:nth-child(7)').textContent.replace(/[^0-9]/g, '')) || 0;
+
+                totalPendapatan += pendapatan;
+                totalPengeluaran += pengeluaran;
+                totalPendapatanBersih += bersih;
+            }
+        });
+
+        document.getElementById('totalPendapatan').textContent = "Rp. " + totalPendapatan.toLocaleString();
+        document.getElementById('totalPengeluaran').textContent = "Rp. " + totalPengeluaran.toLocaleString();
+        document.getElementById('totalPendapatanBersih').textContent = "Rp. " + totalPendapatanBersih.toLocaleString();
+    }
+
+    // Jalankan updateTotal() pertama kali saat halaman load
+    document.addEventListener("DOMContentLoaded", updateTotal);
+</script>
+
+</body>
+</html>

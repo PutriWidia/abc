@@ -10,7 +10,7 @@
 
     <header class="top-bar">
         <div class="left-section">
-          <a href="{{ url('/karyawan-home') }}" class="back-button">
+          <a href="{{ session('previous_page', url()->previous()) }}" class="back-button">
             <img src="{{ asset('images/Back.png') }}" alt="Back">
           </a>
         </div>
@@ -25,16 +25,6 @@
         <input type="text" placeholder="Search">
       </div>
 
-      <div class="filter-wrapper">
-        <button class="filter-btn">&#x1F5D2;</button>
-        <div class="filter-dropdown">
-          <ul>
-            <li>Waktu</li>
-            <li>Nama Permainan</li>
-          </ul>
-        </div>
-      </div>
-
 
 
   <main>
@@ -46,7 +36,6 @@
           <th>Waktu</th>
           <th>Harga</th>
           <th>Status Pembayaran</th>
-          <th>Ket.</th>
         </tr>
       </thead>
       <tbody>
@@ -57,7 +46,6 @@
                 <td>{{ $item->waktu }}</td>
                 <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                 <td>{{ $item->status_pembayaran }}</td>
-                <td>{{ $item->keterangan }}</td>
             </tr>
             @endforeach
       </tbody>

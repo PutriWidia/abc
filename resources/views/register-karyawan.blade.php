@@ -12,7 +12,7 @@
   <div class="background">
     <div class="register-container">
       <h2>Register</h2>
-      <form action="{{ route('register-karyawan') }}" method="POST">
+      <form action="{{ route('register-karyawan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
@@ -57,10 +57,31 @@
             <span>{{ $message }}</span>
         @enderror
         </div>
+
+        <div class="form-group">
+            <label for="foto" class="foto">Foto</label>
+            <img class="foto-karyawan" width="120">
+            <input type="file" id="foto" name="foto" onChange="previewImage()">
+            @error('foto')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
+
         <button type="submit">Submit</button>
       </form>
     </div>
   </div>
+
+  <script>
+    function previewImage() {
+        const file = document.getElementById('foto').files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.querySelector('.foto-karyawan').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+  </script>
 
 </body>
 </html>

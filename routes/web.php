@@ -41,7 +41,7 @@ Route::get('/laporan-keuangan-harian', [LaporanController::class, 'index']);
 Route::post('/karyawan/pengeluaran', [PengeluaranController::class, 'store'])->name('karyawan.addPengeluaran');
 
 Route::get('/register-karyawan', [RegisterKaryawanController::class, 'showForm'])->name('register.karyawan');
-Route::post('/register-karyawan', [RegisterKaryawanController::class, 'store'])->name('register-karyawan');
+Route::post('/register-karyawan', [RegisterKaryawanController::class, 'store'])->name('register-karyawan.store');
 
 Route::get('auth/admin-login', [AdminLoginController::class, 'showLoginForm'])->name('auth.admin-login');
 Route::post('auth/admin-login', [AdminLoginController::class, 'login']);
@@ -93,7 +93,7 @@ Route::post('/tambahiRusak',[buttonController::class, 'tambahiRusak'])->name('ta
 
 // Route::get('/keuangan-admin', [KeuanganController::class, 'index']);
 
-Route::get('/landing', function () {
+Route::get('/', function () {
     return view('landing');
 })->name('landing');
 

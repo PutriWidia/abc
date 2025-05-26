@@ -21,15 +21,25 @@ class RegisterKaryawanController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'no_telp' => 'required|string',
             'password' => 'required|min:6',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+        // $pathFoto = null;
+        if ($request->file('foto')) {
+            $fotoPath = $request->file('foto')->store('public/fotos');
+            $pathFoto = str_replace('public/', '', $fotoPath);
+        }
+        
+        // dd($pathFoto);
         $karyawan = Karyawan::create([
             'username' => $validatedData['username'],
             'email' => $validatedData['email'],
             'jenis_kelamin' => $validatedData['jenis_kelamin'],
             'no_telp' => $validatedData['no_telp'],
             'password' => bcrypt($validatedData['password']),
+            'foto' => $pathFoto,
         ]);
+        // dd($karyawan);
 
         if ($karyawan) {
             session()->flash('success', "Karyawan {$karyawan->username} berhasil didaftarkan");

@@ -68,7 +68,7 @@
         <!-- Kolom 2 -->
         <div class="col-md-4 mb-4">
           <h5 class="fw-bold border-bottom pb-2">KONTAK KAMI</h5>
-          <p><a href="mailto:lilytoys@gmail.com">lilytoys@gmail.com</a><br>0821-2779-8574</p>
+          <p><a href="mailto:lilytoys@gmail.com">lilytoys@gmail.com</a><br><a href="https://wa.me/08997761762">08997761762</a></p>
         </div>
 
         <!-- Kolom 3 -->

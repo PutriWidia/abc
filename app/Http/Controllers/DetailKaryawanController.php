@@ -17,6 +17,7 @@ class DetailKaryawanController extends Controller
     public function detail($id)
     {
         $karyawan = Karyawan::findOrFail($id);
+        // $karyawan->foto_url = $karyawan->foto ? asset('storage/' . $karyawan->foto) : asset('images/User.png');
         return view('detail-karyawan', compact('karyawan'));
     }
 

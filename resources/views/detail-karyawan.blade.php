@@ -18,7 +18,9 @@
   </div>
 
   <div class="profile-pic">
-    <img src="{{ asset('images/User.png') }}" alt="User" class="user-icon">
+    <!-- <img src="{{ asset('images/User.png') }}" alt="User" class="user-icon"> -->
+    <img src="{{ asset('storage/public/' . $karyawan->foto) }}" alt="Foto Profil" width="100" class="user-icon">
+
   </div>
 
   <div class="card">

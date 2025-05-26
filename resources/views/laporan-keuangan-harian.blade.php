@@ -21,19 +21,12 @@
         </div>
       </header>
 
-      <div class="search-bar">
-        <input type="text" placeholder="Search">
-      </div>
-
-
-
   <main>
     <table>
       <thead>
         <tr>
           <th>No.</th>
           <th>Nama Permainan</th>
-          <th>Waktu</th>
           <th>Harga</th>
           <th>Status Pembayaran</th>
         </tr>
@@ -43,7 +36,7 @@
             <tr>
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $item->nama_permainan }}</td>
-                <td>{{ $item->waktu }}</td>
+                <!-- <td>{{ $item->waktu }}</td> -->
                 <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                 <td>{{ $item->status_pembayaran }}</td>
             </tr>

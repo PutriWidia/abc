@@ -19,6 +19,7 @@ class Karyawan extends Authenticatable
         'jenis_kelamin',
         'no_telp',
         'password',
+        'foto',
     ];
 
     protected $hidden = ['password'];
